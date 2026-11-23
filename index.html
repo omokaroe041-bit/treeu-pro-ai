@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <meta name="description" content="TREEU PRO AI trading scanner demo dashboard">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <title>TREEU PRO AI</title>
+  <style>
+    :root{color-scheme:dark;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#0b1220;color:#eef3ff}
+    *{box-sizing:border-box}body{margin:0;padding:20px;max-width:760px;margin-inline:auto}
+    header{padding:20px 0}h1{margin:0;font-size:1.8rem}p{color:#aab7ce;line-height:1.5}
+    .tag{color:#73d6bd;font-weight:700;font-size:.8rem;letter-spacing:.08em}
+    .card{background:#141f32;border:1px solid #263650;border-radius:16px;padding:18px;margin:14px 0}
+    .row{display:flex;justify-content:space-between;gap:12px;align-items:center}
+    .muted{color:#9eacc4}.signal{font-size:1.25rem;font-weight:800}
+    button{background:#73d6bd;color:#092019;border:0;border-radius:12px;padding:13px 16px;font-weight:800;width:100%;font-size:1rem}
+    small{color:#9eacc4}footer{padding:20px 0}
+  </style>
+</head>
+<body>
+  <header><div class="tag">TRADING SCANNER DASHBOARD</div><h1>TREEU PRO AI</h1>
+    <p>Mobile trading-analysis dashboard prototype.</p></header>
+  <section class="card">
+    <div class="row"><strong>Market watch</strong><small>Demo mode</small></div>
+    <p>Gold (XAUUSD), EURUSD and BTCUSD</p>
+    <div class="row"><span class="muted">Sample signal</span><span class="signal" id="signal">WAIT</span></div>
+    <p id="explain">This is an illustrative demo signal, not live market analysis.</p>
+    <button id="refresh">Refresh demo display</button>
+  </section>
+  <section class="card">
+    <strong>Timeframes</strong><p>5 minutes · 15 minutes · 1 hour</p>
+    <strong>Important</strong>
+    <p>This prototype does not connect to a live price feed, provide verified AI predictions, or place trades. Confirm every setup independently before trading.</p>
+  </section>
+  <footer><small> TREEU PRO AI · Prototype dashboard</small></footer>
+  <script>
+    const labels = ["WAIT","DEMO BUY","DEMO SELL"];
+    document.getElementById("refresh").addEventListener("click", () => {
+      const value = labels[Math.floor(Math.random()*labels.length)];
+      document.getElementById("signal").textContent = value;
+      document.getElementById("explain").textContent =
+        "Illustrative demo only (" + new Date().toLocaleTimeString() + "). Not a live trading signal.";
+    });
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+    }
+  </script>
+</body>
+</html>
