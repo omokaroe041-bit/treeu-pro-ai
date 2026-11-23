@@ -1,52 +1,250 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101827">
-  <meta name="description" content="TREEU PRO AI trading scanner demo dashboard">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <title>TREEU PRO AI</title>
-  <style>
-    :root{color-scheme:dark;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#0b1220;color:#eef3ff}
-    *{box-sizing:border-box}body{margin:0;padding:20px;max-width:760px;margin-inline:auto}
-    header{padding:20px 0}h1{margin:0;font-size:1.8rem}p{color:#aab7ce;line-height:1.5}
-    .tag{color:#73d6bd;font-weight:700;font-size:.8rem;letter-spacing:.08em}
-    .card{background:#141f32;border:1px solid #263650;border-radius:16px;padding:18px;margin:14px 0}
-    .row{display:flex;justify-content:space-between;gap:12px;align-items:center}
-    .muted{color:#9eacc4}.signal{font-size:1.25rem;font-weight:800}
-    button{background:#73d6bd;color:#092019;border:0;border-radius:12px;padding:13px 16px;font-weight:800;width:100%;font-size:1rem}
-    small{color:#9eacc4}footer{padding:20px 0}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#081322">
+<title>TREU PRO AI</title>
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#081322;color:#eef4ff;font-family:Arial,sans-serif}
+header{padding:22px 18px;background:#101e32;border-bottom:1px solid #263850}
+header h1{margin:0;color:#65dfbd;font-size:25px}
+header p{color:#9aacc5;font-size:12px}
+main{max-width:650px;margin:auto;padding:15px}
+.card{background:#142238;border:1px solid #293d59;border-radius:17px;padding:18px;margin-bottom:15px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.muted{color:#9aacc5;font-size:13px}
+.balance{font-size:32px;color:#65dfbd;font-weight:bold;margin:10px 0}
+.market{padding:14px 0;border-bottom:1px solid #293d59}
+.market:last-child{border:0}
+.price{font-weight:bold;font-size:19px}
+button{border:0;border-radius:10px;padding:14px;font-weight:bold;font-size:14px;cursor:pointer}
+.start{background:#65dfbd;color:#071c20;width:100%}
+.stop{background:#f16b79;color:white;width:100%}
+.secondary{background:#263b58;color:white}
+.tag{font-size:11px;padding:6px 9px;border-radius:20px;background:#263b58}
+.green{color:#65dfbd}
+.red{color:#ff8790}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:#0d1b2e;border-radius:12px;padding:13px}
+.stat strong{display:block;font-size:20px;margin-top:7px}
+select{background:#0d1b2e;color:white;padding:10px;border:1px solid #344762;border-radius:8px}
+input{accent-color:#65dfbd}
+small{color:#9aacc5}
+table{width:100%;font-size:12px;border-collapse:collapse}
+td,th{text-align:left;padding:10px 4px;border-bottom:1px solid #293d59}
+footer{text-align:center;color:#8294aa;font-size:11px;padding:20px}
+</style>
 </head>
 <body>
-  <header><div class="tag">TRADING SCANNER DASHBOARD</div><h1>TREEU PRO AI</h1>
-    <p>Mobile trading-analysis dashboard prototype.</p></header>
-  <section class="card">
-    <div class="row"><strong>Market watch</strong><small>Demo mode</small></div>
-    <p>Gold (XAUUSD), EURUSD and BTCUSD</p>
-    <div class="row"><span class="muted">Sample signal</span><span class="signal" id="signal">WAIT</span></div>
-    <p id="explain">This is an illustrative demo signal, not live market analysis.</p>
-    <button id="refresh">Refresh demo display</button>
-  </section>
-  <section class="card">
-    <strong>Timeframes</strong><p>5 minutes · 15 minutes · 1 hour</p>
-    <strong>Important</strong>
-    <p>This prototype does not connect to a live price feed, provide verified AI predictions, or place trades. Confirm every setup independently before trading.</p>
-  </section>
-  <footer><small> TREEU PRO AI · Prototype dashboard</small></footer>
-  <script>
-    const labels = ["WAIT","DEMO BUY","DEMO SELL"];
-    document.getElementById("refresh").addEventListener("click", () => {
-      const value = labels[Math.floor(Math.random()*labels.length)];
-      document.getElementById("signal").textContent = value;
-      document.getElementById("explain").textContent =
-        "Illustrative demo only (" + new Date().toLocaleTimeString() + "). Not a live trading signal.";
-    });
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(()=>{}));
-    }
-  </script>
+<header>
+ <div class="row">
+  <h1>TREU PRO AI</h1>
+  <span class="tag">PAPER MODE</span>
+ </div>
+ <p>Mobile Trading Analysis Simulator</p>
+</header>
+
+<main>
+ <section class="card">
+  <div class="muted">VIRTUAL ACCOUNT BALANCE</div>
+  <div class="balance" id="balance">$10,000.00</div>
+  <div class="stats">
+   <div class="stat">
+    <small>Open trades</small>
+    <strong id="openCount">0</strong>
+   </div>
+   <div class="stat">
+    <small>Closed P/L</small>
+    <strong id="profit">$0.00</strong>
+   </div>
+  </div>
+ </section>
+
+ <section class="card">
+  <div class="row">
+   <strong>Market Watch</strong>
+   <span class="tag">SIMULATED DATA</span>
+  </div>
+  <div id="markets"></div>
+  <small>Prices are fictional and generated locally.</small>
+ </section>
+
+ <section class="card">
+  <strong>Automatic Paper Trading</strong>
+  <p class="muted">The simulator uses fictional price movements and a simple educational momentum rule.</p>
+  <div class="row">
+   <label for="marketSelect">Trading market</label>
+   <select id="marketSelect">
+    <option>XAUUSD</option>
+    <option>EURUSD</option>
+    <option>BTCUSD</option>
+   </select>
+  </div>
+  <p class="muted">Virtual trade size: 0.01 units</p>
+  <div style="margin:15px 0">
+   <label><input type="checkbox" id="auto"> Enable automatic demo trading</label>
+  </div>
+  <button class="start" id="start">START SIMULATOR</button>
+  <p id="status" class="muted">Simulator stopped.</p>
+ </section>
+
+ <section class="card">
+  <div class="row">
+   <strong>Open Demo Trades</strong>
+   <button class="secondary" id="closeAll">Close all</button>
+  </div>
+  <div id="positions" class="muted">No open trades.</div>
+ </section>
+
+ <section class="card">
+  <strong>Trade History</strong>
+  <div style="overflow-x:auto">
+   <table>
+    <thead>
+     <tr><th>Market</th><th>Side</th><th>P/L</th></tr>
+    </thead>
+    <tbody id="history">
+     <tr><td colspan="3">No trades yet.</td></tr>
+    </tbody>
+   </table>
+  </div>
+ </section>
+
+ <section class="card">
+  <strong>Important Safety Notice</strong>
+  <p class="muted">
+   This is an educational paper-trading simulator.
+   It does not receive live prices, connect to MT5,
+   detect actual brokers, or execute real trades.
+   Results are fictional and do not predict market performance.
+  </p>
+ </section>
+</main>
+<footer>TREU PRO AI · Mobile Paper Trading · Version 1.0</footer>
+
+<script>
+const names=["XAUUSD","EURUSD","BTCUSD"];
+const prices={XAUUSD:2650,EURUSD:1.08,BTCUSD:65000};
+const changes={XAUUSD:0,EURUSD:0,BTCUSD:0};
+const previous={...prices};
+let balance=10000;
+let closedPL=0;
+let positions=[];
+let history=[];
+let running=false;
+let timer=null;
+let ticks=0;
+let lastSide={};
+
+const money=n=>"$"+n.toFixed(2);
+
+function render(){
+ document.getElementById("balance").textContent=money(balance);
+ document.getElementById("profit").textContent=money(closedPL);
+ document.getElementById("openCount").textContent=positions.length;
+
+ document.getElementById("markets").innerHTML=names.map(n=>`
+ <div class="market row">
+  <div><strong>${n}</strong><br><small>Demo market</small></div>
+  <div style="text-align:right">
+   <div class="price">${prices[n].toFixed(n==="EURUSD"?5:2)}</div>
+   <small class="${changes[n]>=0?'green':'red'}">
+   ${changes[n]>=0?"+":""}${changes[n].toFixed(3)}%
+   </small>
+  </div>
+ </div>`).join("");
+
+ document.getElementById("positions").innerHTML=positions.length?
+ positions.map((p,i)=>`
+ <div class="market">
+ <div class="row">
+ <strong>${p.market} · ${p.side}</strong>
+ <span class="${p.pl>=0?'green':'red'}">${money(p.pl)}</span>
+ </div>
+ <small>Entry: ${p.entry.toFixed(4)}</small>
+ <button class="secondary" onclick="closePosition(${i})">Close demo trade</button>
+ </div>`).join(""):"No open trades.";
+
+ document.getElementById("history").innerHTML=history.length?
+ history.slice(-15).reverse().map(p=>`
+ <tr><td>${p.market}</td><td>${p.side}</td>
+ <td class="${p.pl>=0?'green':'red'}">${money(p.pl)}</td></tr>`
+ ).join(""):'<tr><td colspan="3">No trades yet.</td></tr>';
+}
+
+function openPosition(market,side){
+ if(positions.some(p=>p.market===market))return;
+ const price=prices[market];
+ positions.push({
+  market,side,entry:price,pl:0,
+  size:0.01,
+  direction:side==="BUY"?1:-1
+ });
+ lastSide[market]=side;
+ render();
+}
+
+function closePosition(i){
+ const p=positions[i];
+ if(!p)return;
+ balance+=p.pl;
+ closedPL+=p.pl;
+ history.push({...p});
+ positions.splice(i,1);
+ render();
+}
+
+function closeAll(){
+ while(positions.length)closePosition(0);
+}
+
+function tick(){
+ ticks++;
+ names.forEach(n=>{
+  const old=prices[n];
+  const volatility=n==="BTCUSD"?0.004:n==="XAUUSD"?0.0015:0.0005;
+  const move=(Math.random()-0.5)*volatility*2;
+  prices[n]=Math.max(0.00001,old*(1+move));
+  changes[n]=((prices[n]-old)/old)*100;
+ });
+
+ positions.forEach(p=>{
+  const movement=(prices[p.market]-p.entry)*p.direction;
+  p.pl=movement*p.size*10;
+ });
+
+ if(document.getElementById("auto").checked&&ticks%5===0){
+  const market=document.getElementById("marketSelect").value;
+  if(!positions.some(p=>p.market===market)){
+   const side=changes[market]>=0?"BUY":"SELL";
+   openPosition(market,side);
+  }
+ }
+ render();
+}
+
+document.getElementById("start").onclick=()=>{
+ if(running){
+  clearInterval(timer);
+  running=false;
+  document.getElementById("start").textContent="START SIMULATOR";
+  document.getElementById("start").className="start";
+  document.getElementById("status").textContent="Simulator stopped.";
+ }else{
+  running=true;
+  timer=setInterval(tick,2000);
+  document.getElementById("start").textContent="STOP SIMULATOR";
+  document.getElementById("start").className="stop";
+  document.getElementById("status").textContent="Generating fictional demo prices...";
+ }
+};
+
+document.getElementById("closeAll").onclick=closeAll;
+render();
+</script>
 </body>
 </html>
